@@ -7,18 +7,17 @@
 #   Will this work well? idk
 
 
-deriv <- function(x, y, window = 1, blank = 0){
+deriv <- function(times, meas, window = 1, blank = 0){
 
   # first we need to log y
-  log_y <- log(y)
+  log_y <- log(meas)
 
-  derivatives <- c()
-  #now you need to start window lm
+  ans <- rep(NA, length(meas))
   for (i in 1:(length(log_y)-1)){
-    slope <- (log_y[i+1] - log_y[i]) / (x[i+1]- y[i])
-    derivatives <- c(derivatives, slope)
+    slope <- ((log_y[i+1] - log_y[i]) / ((times[i+1] - length(times)/2) - meas[i]))
+    ans[i] <- slope
   }
-  print(derivatives)
+  return(ans)
 }
 
 
