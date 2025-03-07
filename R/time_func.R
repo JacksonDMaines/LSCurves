@@ -60,7 +60,7 @@ lagtime <- function(time, meas, differences, showplot = FALSE){
   slope2 <- ((meas[maxgrowth] - meas[maxgrowth - 1]) / (time[maxgrowth] - time[maxgrowth - 1]))
   slope <- (slope1 + slope2) / 2
   #fit tangent line to the point
-  y <- slope * (time - time[maxgrowth]) - meas[maxgrowth]
+  y <- slope * (time - time[maxgrowth]) + meas[maxgrowth]
     # y−y1=m(x−x1)
   #find where it intersects with min meas value
   min_meas <- min(meas)
@@ -78,6 +78,21 @@ lagtime <- function(time, meas, differences, showplot = FALSE){
 
 # Create function to find stationary time
   #Sliding window with threshold and window parameters
+stattime <- function(time, meas, lag, threshold = .1, window = 3){
+  # filter to points right of lagtime
+  time <-  which(time > lag)
+  meas <-  meas[(length(meas) - length(time)):length(meas)]
+
+  log_meas <- log(meas)
+
+  #sliding window
+  # find points that are linear in log
+  # define threshold value that breaks sliding window
+
+
+
+  #return stationary time
+}
 
 
 # fit exp to points inbetween lag and stat time
