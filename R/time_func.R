@@ -89,7 +89,7 @@ stattime <- function(time, meas, lag, threshold = .1, window = 3){
   # find points that are linear in log
   # define threshold value that breaks sliding window
 
-  # Idea: need every gap to satisfy threshold
+  # Idea: need every gap to satisfy threshold (of what?)
   # when no gap satisfies the threshold, then the first point of
   # window is stationary time
   # not sure this is the best idea anymore
