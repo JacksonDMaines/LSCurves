@@ -80,15 +80,31 @@ lagtime <- function(time, meas, differences, showplot = FALSE){
   #Sliding window with threshold and window parameters
 stattime <- function(time, meas, lag, threshold = .1, window = 3){
   # filter to points right of lagtime
-  time <-  which(time > lag)
-  meas <-  meas[(length(meas) - length(time)):length(meas)]
+  time_l <-  which(time > lag)
+  meas_l <-  meas[(length(meas) - length(time)):length(meas)]
 
-  log_meas <- log(meas)
+  log_meas <- log(meas_l)
 
   #sliding window
   # find points that are linear in log
   # define threshold value that breaks sliding window
 
+  # Idea: need every gap to satisfy threshold
+  # when no gap satisfies the threshold, then the first point of
+  # window is stationary time
+  # not sure this is the best idea anymore
+  # need to check
+
+  # so i is the start of the window
+  # j is end of the window
+  for (i in 1:(length(log_meas) - window)) {
+    for (j in 1:window) {
+      log_meas
+
+    }
+
+
+  }
 
 
   #return stationary time
