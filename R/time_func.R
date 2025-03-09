@@ -83,31 +83,23 @@ stattime <- function(time, meas, lag, threshold = .1, window = 3){
   time_l <-  which(time > lag)
   meas_l <-  meas[(length(meas) - length(time)):length(meas)]
 
-  log_meas <- log(meas_l)
+  # log the values after lag
+  log_meas_l <- log(meas_l)
 
-  #sliding window
-  # find points that are linear in log
-  # define threshold value that breaks sliding window
+  # instead of finding changes in lag phase
+  # we can find where the change between points is
+  # small?
 
-  # Idea: need every gap to satisfy threshold (of what?)
-  # when no gap satisfies the threshold, then the first point of
-  # window is stationary time
-  # not sure this is the best idea anymore
-  # need to check
+  # find new differences of the post lag values
+  yea <- differences(log_meas_l)
 
-  # so i is the start of the window
-  # j is end of the window
-  for (i in 1:(length(log_meas) - window)) {
-    for (j in 1:window) {
-      log_meas
+  # find cutoff value
+  cutoff <- threshold * yea
 
-    }
+  #which indicies are below
+  indexs <- which(yea < cutoff)
 
 
-  }
-
-
-  #return stationary time
 }
 
 
