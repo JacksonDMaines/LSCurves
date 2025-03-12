@@ -36,5 +36,8 @@ abline(v = 26.7184)
 # differences
 # create cutoff value
 # find window that doesnt satify cutoff value? maybe
+
+
+bleh <- stattime(time = x2, meas = z, lag)
 #
 

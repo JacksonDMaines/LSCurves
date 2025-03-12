@@ -91,13 +91,20 @@ stattime <- function(time, meas, lag, threshold = .1, window = 3){
   # small?
 
   # find new differences of the post lag values
-  yea <- differences(log_meas_l)
+  yea <- differences(time, log_meas_l)
 
   # find cutoff value
   cutoff <- threshold * yea
 
-  #which indicies are below
+  #which indicies are below cutoff
   indexs <- which(yea < cutoff)
+
+  for (i in (length(indexs) - window)) {
+    current_window <- indexs[i:(i + window)]
+    if (all(yea[current_window]) == 1) {
+      return(log_meas_l[i])
+    }
+  }
 
 
 }
