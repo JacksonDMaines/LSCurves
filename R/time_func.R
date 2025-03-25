@@ -34,6 +34,24 @@ differences <- function(times, meas, showplot = FALSE){
   return(ans)
 }
 
+
+differences2 <- function(times, meas, showplot = FALSE){
+
+  ans <- rep(NA, length(meas))
+  ans[1] <- 0
+  log_meas <- log(meas)
+  for (i in 1:(length(log_meas)-1)){
+    slope <- log_meas[i+1] - log_meas[i]
+    ans[i+1] <- slope
+
+  }
+  if(showplot == TRUE){
+    plot(times, ans, type = "l")
+  }
+  return(ans)
+}
+
+
 # Third Idea:
   # Fit lm between points and find rate of change by subtracting last slope
   # by new slope?
@@ -110,4 +128,39 @@ stattime <- function(time, meas, lag, threshold = .1, window = 3){
 }
 
 
+stattime <- function(time, meas, lag, threshold = .01, window =3){
+
+  # filter to points right of lagtime
+  time_l <-  which(time > lag)
+  meas_l <-  meas[(length(meas) - length(time)):length(meas)]
+
+  # log the values after lag
+  log_meas_l <- log(meas_l)
+
+  # instead of finding changes in lag phase
+  # we can find where the change between points is
+  # small?
+
+  # find new differences of the post lag values
+  yea <- differences(time, log_meas_l)
+
+  # find cutoff value
+  cutoff <- threshold * yea
+
+  #which indicies are below cutoff
+  indexs <- which(yea < cutoff)
+
+  # find consecutive window size below cutoff value?
+  for (i in (length(indexs) - window)) {
+    current_window <- indexs[i:(i + window)]
+    if(all(indexs[current_window] > threshold)){
+      print(time_l[i])
+    }
+  }
+}
+
+
+
+
 # fit exp to points inbetween lag and stat time
+
