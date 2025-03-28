@@ -123,21 +123,58 @@ lag <- lagtime(time = x2, meas = z, differences = test, showplot = TRUE)
 time_l <-  x2[which(x2 > lag)]
 meas_l <- log(z[(length(z) - length(time_l) + 1):length(z)])
 meas_ln <- z[(length(z) - length(time_l) + 1):length(z)]
+meas_lD <- differences2(time = time_l, meas = meas_l, showplot = TRUE)
 plot(time_l, meas_l)
-plot(time_l, meas_ln)
+plot(time_l, meas_lD)
 
 ## multiple differences by threshold
 threshold <- .01
-whatdiff <- diff(meas_l)
-newdiff <- diff(meas_l) * threshold
-plot(1:32, newdiff)
+newdiff <- max(meas_lD) * threshold # this threshold window would fail index one as its 0
+plot(28:60, meas_lD)
+abline(h = newdiff)
+
+
+window  <- 2
+for (i in 2:(length(time_l) - window)) {
+  current_window <- meas_lD[i:(i + window)]
+  if (all(current_window > newdiff)) {
+    print(meas_lD[i])
+    print(i)
+    j <- i
+  }
+}
+
+plot(28:60, meas_lD)
+abline(h = newdiff)
+abline(v = 34)
+
+plot(x2, z)
+abline(v = ceiling(lag) + 5)
+abline(v = lag)
+
 
 # just for this synthetic data after the threshold you could do while
 # all(stuff) == TRUE print index, then just output last index?
+# cant figure this out.
 
 #alt idea
 # next slope be threshold percentage of last slope
+# sudo code
+  # window
+  # for i in legnth
+  # define current window
+  # if all in the current window are > threshold of last point keep going,  #### I dont know how to do this?
+  # once all points in window < threshold
 
+
+  # differences are within
+window  <- 2
+for (i in 1:(length(time_l) - window - 1)) {
+  current_window <- what[i:(i + window)]
+  if (all(current_window > .05)) {
+    print(what[i])
+  }
+}
 
 
 
