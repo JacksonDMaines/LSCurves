@@ -37,6 +37,7 @@ differences <- function(times, meas, showplot = FALSE){
 
 differences2 <- function(times, meas, showplot = FALSE){
 
+
   ans <- rep(NA, length(meas))
   ans[1] <- 0
   log_meas <- log(meas)
@@ -82,7 +83,7 @@ lagtime <- function(time, meas, differences, showplot = FALSE){
     # y−y1=m(x−x1)
   #find where it intersects with min meas value
   min_meas <- min(meas)
-  lag <- ((min_meas - meas[maxgrowth]) / slope) + time[maxgrowth]
+  lagindex <- ((min_meas - meas[maxgrowth]) / slope) + time[maxgrowth]
 
   if(showplot == TRUE){
     plot(time, meas)
@@ -127,40 +128,49 @@ stattime <- function(time, meas, lag, threshold = .1, window = 3){
 
 }
 
-
-stattime <- function(time, meas, lag, threshold = .01, window =3){
+# Ok this works, but od data is really small like ~ .1 and times arent always just
+# 1, 2, 3,4... it might be 0, 20, 40min gaps
+# first one, probably just add 1 to all data so it doesnt error out?
+  # also I need better synthetic data, this shits trash.
+stattime <- function(time, meas, diff, lag, threshold = .01, window =3, showplot = FALSE){
 
   # filter to points right of lagtime
-  time_l <-  which(time > lag)
-  meas_l <-  meas[(length(meas) - length(time)):length(meas)]
+  time_l <-  time[which(time > lag)]
+  meas_l <- meas[(length(meas) - length(time_l) + 1):length(meas)]
 
-  # log the values after lag
-  log_meas_l <- log(meas_l)
+  meas_lD <- differences2(time = time_l, meas = meas_l)
 
   # instead of finding changes in lag phase
   # we can find where the change between points is
   # small?
+  newdiff <- max(meas_lD) * threshold # this threshold window would fail index one as its 0
 
-  # find new differences of the post lag values
-  yea <- differences(time, log_meas_l)
-
-  # find cutoff value
-  cutoff <- threshold * yea
-
-  #which indicies are below cutoff
-  indexs <- which(yea < cutoff)
-
-  # find consecutive window size below cutoff value?
-  for (i in (length(indexs) - window)) {
-    current_window <- indexs[i:(i + window)]
-    if(all(indexs[current_window] > threshold)){
-      print(time_l[i])
+  j  <- 1
+  for (i in 2:(length(time_l) - window)) {
+    current_window <- meas_lD[i:(i + window)]
+    if (all(current_window > newdiff)) {
+      j <- j + 1
     }
   }
+
+  if(showplot == TRUE){
+    plot(time, meas)
+    abline(v = lag)
+    abline(v = ceiling(lag) + j)
+  }
+
+  return(j)
+  #output actually stat time not j
+  # probably for this I can get the lag time index, oh wait its not on an index,
+  # but just add j to lagtime index and get
+  # maybe just use 1:n instead of time then flip at end
+
+
 }
 
 
 
 
 # fit exp to points inbetween lag and stat time
+
 
