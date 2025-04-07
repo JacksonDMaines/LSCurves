@@ -83,7 +83,7 @@ lagtime <- function(time, meas, differences, showplot = FALSE){
     # y−y1=m(x−x1)
   #find where it intersects with min meas value
   min_meas <- min(meas)
-  lagindex <- ((min_meas - meas[maxgrowth]) / slope) + time[maxgrowth]
+  lag <- ((min_meas - meas[maxgrowth]) / slope) + time[maxgrowth]
 
   if(showplot == TRUE){
     plot(time, meas)
@@ -154,12 +154,12 @@ stattime <- function(time, meas, diff, lag, threshold = .01, window =3, showplot
   }
 
   if(showplot == TRUE){
-    plot(time, meas)
+    plot(time, log(meas))
     abline(v = lag)
     abline(v = ceiling(lag) + j)
   }
 
-  return(j)
+  return(ceiling(lag) + j)
   #output actually stat time not j
   # probably for this I can get the lag time index, oh wait its not on an index,
   # but just add j to lagtime index and get
@@ -170,7 +170,22 @@ stattime <- function(time, meas, diff, lag, threshold = .01, window =3, showplot
 
 
 
+# fit linear model to log of data
+loglin_growth <- function(time, meas, lag, stat) {
+  # log meas
+  meas_l <- log(meas)
+
+  #parse out exp phase
+  indexs <- which(time > lag & time < stat)
+  time_e <- time[indexs]
+  meas_e <- meas_l[indexs]
+
+  model <- lm(meas_e ~ time_e)
+
+  return(model$coefficients[2])
+
+
+}
+
 
 # fit exp to points inbetween lag and stat time
-
-
