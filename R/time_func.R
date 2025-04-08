@@ -97,42 +97,16 @@ lagtime <- function(time, meas, differences, showplot = FALSE){
 
 # Create function to find stationary time
   #Sliding window with threshold and window parameters
-stattime <- function(time, meas, lag, threshold = .1, window = 3){
-  # filter to points right of lagtime
-  time_l <-  which(time > lag)
-  meas_l <-  meas[(length(meas) - length(time)):length(meas)]
 
-  # log the values after lag
-  log_meas_l <- log(meas_l)
-
-  # instead of finding changes in lag phase
-  # we can find where the change between points is
-  # small?
-
-  # find new differences of the post lag values
-  yea <- differences(time, log_meas_l)
-
-  # find cutoff value
-  cutoff <- threshold * yea
-
-  #which indicies are below cutoff
-  indexs <- which(yea < cutoff)
-
-  for (i in (length(indexs) - window)) {
-    current_window <- indexs[i:(i + window)]
-    if (all(yea[current_window]) == 1) {
-      return(log_meas_l[i])
-    }
-  }
-
-
-}
 
 # Ok this works, but od data is really small like ~ .1 and times arent always just
 # 1, 2, 3,4... it might be 0, 20, 40min gaps
 # first one, probably just add 1 to all data so it doesnt error out?
   # also I need better synthetic data, this shits trash.
 stattime <- function(time, meas, diff, lag, threshold = .01, window =3, showplot = FALSE){
+
+  # first lag index
+  time1 <- which(time > lag)[1]
 
   # filter to points right of lagtime
   time_l <-  time[which(time > lag)]
@@ -153,17 +127,16 @@ stattime <- function(time, meas, diff, lag, threshold = .01, window =3, showplot
     }
   }
 
+  # find index of stationary phase
+  end_index <- time1 + j
+
   if(showplot == TRUE){
     plot(time, log(meas))
     abline(v = lag)
-    abline(v = ceiling(lag) + j)
+    abline(v = time[end_index])
   }
 
-  return(ceiling(lag) + j)
-  #output actually stat time not j
-  # probably for this I can get the lag time index, oh wait its not on an index,
-  # but just add j to lagtime index and get
-  # maybe just use 1:n instead of time then flip at end
+  return(time[end_index])
 
 
 }
