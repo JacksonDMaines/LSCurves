@@ -154,11 +154,63 @@ loglin_growth <- function(time, meas, lag, stat) {
   meas_e <- meas_l[indexs]
 
   model <- lm(meas_e ~ time_e)
+  model <- summary(model)
 
-  return(model$coefficients[2])
+  outputlist <- list("Growth Rate" = model$coefficients[2,1],
+                     "P-Value" = model$coefficients[2,4])
+  # return growth rate
+  return(outputlist)
+
+
+  }
+
+
+area_uCurve <- function(time, meas, diff, rsums) {
+  #rsums = ("upper", "lower", "average")
+    # do upper/lower or average the two riemman sum
+
+
 
 
 }
 
-
 # fit exp to points inbetween lag and stat time
+
+
+
+
+# find AUC with riemman type sums
+area_uCurve <- function(time, meas, rsums) {
+  #rsums = ("upper", "lower", "average")
+  # do upper/lower or average the two riemman sum
+
+
+
+  if (rsums == "upper") {
+    area <- 0
+    for (i in 1:(length(time)-1)) {
+      area <- area + (time[i] * meas[i + 1])
+    }
+
+    return(area)
+  } else if(rsums == "lower"){
+    area <- 0
+    for (i in 1:(length(time)-1)) {
+      area <- area + (time[i] * meas[i])
+    }
+  } else if (rsums == "avg"){
+
+    lower <- 0
+    upper <- 0
+    for (i in 1:(length(time)-1)) {
+      lower <- lower + (time[i] * meas[i])
+      upper <- upper + (time[i] * meas[i + 1])
+
+      area <- (upper + lower) / 2
+    }
+
+  }
+
+  return(area)
+
+}
