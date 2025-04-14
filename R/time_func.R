@@ -38,6 +38,11 @@ differences <- function(times, meas, showplot = FALSE){
 differences2 <- function(times, meas, showplot = FALSE){
 
 
+  if (any(is.na(times) == TRUE | any(is.na(meas)) == TRUE)) {
+    stop("NAs in time or meas \n Clean the data")
+  }
+
+
   ans <- rep(NA, length(meas))
   ans[1] <- 0
   log_meas <- log(meas)
@@ -180,10 +185,10 @@ area_uCurve <- function(time, meas, diff, rsums) {
 
 
 # find AUC with riemman type sums
-area_uCurve <- function(time, meas, rsums) {
-  #rsums = ("upper", "lower", "average")
+area_uCurve <- function(time, meas, rsums = "average") {
+  #rsums = ("upper", "lower")
+  # default if average
   # do upper/lower or average the two riemman sum
-
 
 
   if (rsums == "upper") {
@@ -198,7 +203,7 @@ area_uCurve <- function(time, meas, rsums) {
     for (i in 1:(length(time)-1)) {
       area <- area + (time[i] * meas[i])
     }
-  } else if (rsums == "avg"){
+  } else {
 
     lower <- 0
     upper <- 0
