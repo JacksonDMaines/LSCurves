@@ -42,8 +42,21 @@ when <- c(1, 2, 3, 4, 5)
 any(is.na(who))
 
 
-if (any(is.na(time) == TRUE | any(is.na(meas)) == TRUE)) {
-  stop("NAs in time or meas \n Clean the data")
-}
-
 differences2(who, when)
+lagtime(who, when, who)
+loglin_growth(who, when, 1)
+
+
+#################################################################################
+
+x <- -30:30
+y <- exp(x) / (1 + exp(x))
+z <- y + rnorm(length(y), 0,.01) + .1
+#x2 <- 60:120
+x2 <- seq(from = 0, to = 7023,length.out = 61)
+SynGrowth <- data.frame(time = x2, meas = z)
+SynGrowth$diff <- differences2(times = SynGrowth$time, meas = SynGrowth$meas)
+SynGrowth$lag <- lagtime(time = SynGrowth$time, meas = SynGrowth$meas, differences = SynGrowth$diff)
+SynGrowth$stat <- stattime(time = SynGrowth$time, meas = SynGrowth$meas, lag = SynGrowth$lag)
+SynGrowth$rate <- loglin_growth(time = SynGrowth$time, meas = SynGrowth$meas, lag = SynGrowth$lag, stat = SynGrowth$stat)
+  # gotta figure out way to output two columns idk maybe

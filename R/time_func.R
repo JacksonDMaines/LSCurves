@@ -76,6 +76,11 @@ deriv2 <- function(time, meas, window = 3){
 
 # Create function to find lag time
 lagtime <- function(time, meas, differences, showplot = FALSE){
+
+  if (any(is.na(time) == TRUE | any(is.na(meas)) == TRUE)) {
+    stop("NAs in time or meas \n Clean the data")
+  }
+
   # first find max point in differences
   maxgrowth <- which.max(differences)
 
@@ -109,6 +114,10 @@ lagtime <- function(time, meas, differences, showplot = FALSE){
 # first one, probably just add 1 to all data so it doesnt error out?
   # also I need better synthetic data, this shits trash.
 stattime <- function(time, meas, diff, lag, threshold = .01, window =3, showplot = FALSE){
+
+  if (any(is.na(time) == TRUE | any(is.na(meas)) == TRUE)) {
+    stop("NAs in time or meas \n Clean the data")
+  }
 
   # first lag index
   time1 <- which(time > lag)[1]
@@ -150,6 +159,11 @@ stattime <- function(time, meas, diff, lag, threshold = .01, window =3, showplot
 
 # fit linear model to log of data
 loglin_growth <- function(time, meas, lag, stat) {
+
+  if (any(is.na(time) == TRUE | any(is.na(meas)) == TRUE)) {
+    stop("NAs in time or meas \n Clean the data")
+  }
+
   # log meas
   meas_l <- log(meas)
 
@@ -167,17 +181,9 @@ loglin_growth <- function(time, meas, lag, stat) {
   return(outputlist)
 
 
-  }
-
-
-area_uCurve <- function(time, meas, diff, rsums) {
-  #rsums = ("upper", "lower", "average")
-    # do upper/lower or average the two riemman sum
-
-
-
-
 }
+
+
 
 # fit exp to points inbetween lag and stat time
 
@@ -189,6 +195,10 @@ area_uCurve <- function(time, meas, rsums = "average") {
   #rsums = ("upper", "lower")
   # default if average
   # do upper/lower or average the two riemman sum
+
+  if (any(is.na(time) == TRUE | any(is.na(meas)) == TRUE)) {
+    stop("NAs in time or meas \n Clean the data")
+  }
 
 
   if (rsums == "upper") {
